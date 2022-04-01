@@ -20,6 +20,8 @@
 #include "ranking.h"
 #include "light.h"
 
+#include <assert.h>
+
 //==================================================
 // 定義
 //==================================================
@@ -34,8 +36,8 @@ const float	SCORE_HEIGHT = 150.0f;	// スコアの高さ
 //==================================================
 namespace
 {
-int	s_nIdxScore;	// 数の配列のインデックス
-int	s_nScore;		// スコア
+int	s_nIdx;		// 数の配列のインデックス
+int	s_nScore;	// スコア
 }// namespaceはここまで
 
 //--------------------------------------------------
@@ -43,13 +45,29 @@ int	s_nScore;		// スコア
 //--------------------------------------------------
 void InitScore(void)
 {
-	s_nScore = GetLight() - 1;
-
 	D3DXVECTOR3 size = D3DXVECTOR3(SCORE_WIDTH, SCORE_HEIGHT, 0.0f);
-	D3DXVECTOR3 pos = D3DXVECTOR3(SCREEN_WIDTH * 0.68f, SCREEN_HEIGHT * 0.25f, 0.0f);
+	D3DXVECTOR3 pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+	switch (GetMode())
+	{
+	case MODE_GAME:		// ゲーム
+		pos = D3DXVECTOR3(SCREEN_WIDTH * 0.75f, SCREEN_HEIGHT * 0.13f, 0.0f);
+		break;
+
+	case MODE_RESULT:	// リザルト
+		pos = D3DXVECTOR3(SCREEN_WIDTH * 0.68f, SCREEN_HEIGHT * 0.25f, 0.0f);
+		break;
+
+	case MODE_TITLE:	// タイトル
+	case MODE_TUTORIAL:	// チュートリアル
+	case MODE_NONE:		// 何もしていない
+	default:
+		assert(false);
+		break;
+	}
 
 	// 数の設定
-	s_nIdxScore = SetNumber(pos, size, GetColor(COLOR_WHITE), s_nScore, DigitNumber(s_nScore), false);
+	s_nIdx = SetNumber(pos, size, GetColor(COLOR_WHITE), s_nScore, DigitNumber(s_nScore), false);
 }
 
 //--------------------------------------------------
@@ -58,7 +76,7 @@ void InitScore(void)
 void UninitScore(void)
 {
 	// 使うのを止める
-	StopUseRectangle(s_nIdxScore);
+	StopUseRectangle(s_nIdx);
 }
 
 //--------------------------------------------------
@@ -74,6 +92,28 @@ void UpdateScore(void)
 void DrawScore(void)
 {
 	/* 矩形で描画してます */
+}
+
+//--------------------------------------------------
+// 設定
+//--------------------------------------------------
+void SetScore(int nScore)
+{
+	s_nScore = nScore;
+
+	// 数の変更
+	s_nIdx = ChangeNumber(s_nIdx, s_nScore);
+}
+
+//--------------------------------------------------
+// 加算
+//--------------------------------------------------
+void AddScore(int nValue)
+{
+	s_nScore += nValue;
+
+	// 数の変更
+	s_nIdx = ChangeNumber(s_nIdx, s_nScore);
 }
 
 //--------------------------------------------------

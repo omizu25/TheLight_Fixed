@@ -20,6 +20,7 @@
 #include "bg.h"
 #include "sound.h"
 #include "ui.h"
+#include "score.h"
 
 //==================================================
 // 定義
@@ -118,6 +119,9 @@ void SetAnswer(int nNowLight)
 			s_bMax = true;
 			s_nTime = 0;
 			s_bAnswer = true;
+
+			// スコアの加算
+			AddScore(1);
 		}
 	}
 	else

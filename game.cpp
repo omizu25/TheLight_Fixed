@@ -93,6 +93,12 @@ void InitGame(void)
 	// エフェクトの初期化
 	InitEffect();
 
+	// スコアの初期化
+	InitScore();
+
+	// スコアの設定
+	SetScore(0);
+
 	// 月の背景の初期化
 	InitMoonBG();
 
@@ -159,6 +165,9 @@ void UninitGame(void)
 
 	// エフェクトの終了
 	UninitEffect();
+	
+	// スコアの終了
+	UninitScore();
 
 	// ライトの終了
 	UninitLight();
@@ -262,6 +271,9 @@ void UpdateGame(void)
 
 	// エフェクトの更新
 	UpdateEffect();
+
+	// スコアの更新
+	UpdateScore();
 }
 
 //--------------------------------------------------
